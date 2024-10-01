@@ -1,4 +1,4 @@
-let tarefas = [];
+var tarefas = [];
 
 function adicionarTarefa() {
     const input = document.getElementById("tarefa-text");
@@ -13,11 +13,11 @@ function adicionarTarefa() {
         id: Math.floor(Math.random() * 1000000),
         text: tarefaTexto,
         completed: false
-    };
+    }
 
     tarefas.push(novaTarefa);
-    localStorage.setItem("tarefas", JSON.stringify(tarefas));
-    render();
+    localStorage.setItem("tarefas", JSON.stringify(tarefas))
+    render()
     input.value = "";
     input.focus();
 }
@@ -26,49 +26,53 @@ function render() {
     const listaTarefas = document.getElementById("lista-tarefa");
     listaTarefas.innerHTML = "";
 
-    tarefas.forEach(tarefa => {
+    for (var i = 0; i < tarefas.length; i++) {
         const li = document.createElement("li");
-        if (tarefa.completed) {
+        if (tarefas[i].completed === true) {
             li.classList.add("completed");
         }
 
         const span = document.createElement("span");
-        span.textContent = tarefa.text;
+        span.textContent = tarefas[i].text;
 
         const concluir = document.createElement("span");
         concluir.textContent = "task_alt";
-        concluir.classList.add("check", "material-symbols-outlined");
-        concluir.setAttribute("onclick", `trocaConcluir(${tarefa.id})`);
+        concluir.classList.add("check");
+        concluir.classList.add("material-symbols-outlined")
+        concluir.setAttribute("onclick", `trocaConcluir(${tarefas[i].id})`);
 
         const edit = document.createElement("span");
         edit.textContent = "edit_note";
-        edit.classList.add("edit", "material-symbols-outlined");
-        edit.setAttribute("onclick", `editarTarefa(${tarefa.id})`);
+        edit.classList.add("edit");
+        edit.classList.add("material-symbols-outlined");
+        edit.setAttribute("onclick", `editarTarefa(${tarefas[i].id})`)
 
         const deletar = document.createElement("span");
         deletar.textContent = "delete";
-        deletar.classList.add("delete", "material-symbols-outlined");
-        deletar.setAttribute("onclick", `deletarTarefa(${tarefa.id})`);
+        deletar.classList.add("delete");
+        deletar.classList.add("material-symbols-outlined");
+        deletar.setAttribute("onclick", `deletarTarefa(${tarefas[i].id})`)
 
         const div = document.createElement("div");
-        div.style.display = 'flex';
-        div.style.marginTop = '2px';
-
-        div.appendChild(concluir);
-        div.appendChild(edit);
-        div.appendChild(deletar);
+        div.style.display = 'flex'
+        div.style.marginTop = '2px'
+        
+        div.appendChild(concluir)
+        div.appendChild(edit)
+        div.appendChild(deletar)
 
         li.appendChild(span);
         li.appendChild(div);
 
         listaTarefas.appendChild(li);
-    });
+    }
 }
 
 function trocaConcluir(id) {
     const index = tarefas.findIndex(tarefa => tarefa.id === id);
-    tarefas[index].completed = !tarefas[index].completed;
-    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    const valorAtual = tarefas[index].completed;
+    tarefas[index].completed = !valorAtual;
+    localStorage.setItem("tarefas", JSON.stringify(tarefas))
     render();
 }
 
@@ -78,26 +82,26 @@ function editarTarefa(id) {
 
     if (novoTextoTarefa !== null && novoTextoTarefa.trim() !== '') {
         tarefas[index].text = novoTextoTarefa;
-        localStorage.setItem("tarefas", JSON.stringify(tarefas));
+        localStorage.setItem("tarefas", JSON.stringify(tarefas))
         render();
     }
 }
 
-function deletarTarefa(id) {
+function deletarTarefa(id){
     tarefas = tarefas.filter(tarefa => tarefa.id !== id);
-    localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    localStorage.setItem("tarefas", JSON.stringify(tarefas))
     render();
 }
 
-function addPeloEnter(event) {
-    if (event.key === 'Enter') {
+function addPeloEnter(evento){
+    if(evento.key === 'Enter'){
         adicionarTarefa();
     }
 }
 
 function carregarTarefas() {
     const tarefasLocalStore = localStorage.getItem("tarefas");
-    if (tarefasLocalStore) {
+    if(tarefasLocalStore){
         tarefas = JSON.parse(tarefasLocalStore);
         render();
     }
